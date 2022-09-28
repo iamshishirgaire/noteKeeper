@@ -14,7 +14,7 @@ class _NoteListViewState extends State<NoteListView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("    NoteKeeper"),
+        title: const Text("    Edit Notes"),
       ),
       body: ListView.builder(
         itemCount: _count,
