@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "421929970358",
+    "project_id": "my-noteapp-123",
+    "storage_bucket": "my-noteapp-123.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:421929970358:android:e8e880f1ae1d59cec75417",
+        "android_client_info": {
+          "package_name": "com.example.loginui"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "421929970358-7v9sfn8jtj5eqt3e6id4e23qd8b6e14j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFKSgelEgGEFgbnyQUg_5OC5gFMfRaEPc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "421929970358-7v9sfn8jtj5eqt3e6id4e23qd8b6e14j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "421929970358-3ig52202pj2hlkp1fp17e15r9jct5jsv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.loginui"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
