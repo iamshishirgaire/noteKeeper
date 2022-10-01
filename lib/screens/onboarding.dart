@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:loginui/screens/login.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class OnBoardingPage extends StatefulWidget {
+  const OnBoardingPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<OnBoardingPage> createState() => _OnBoardingPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _OnBoardingPageState extends State<OnBoardingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,9 +36,12 @@ class _LoginPageState extends State<LoginPage> {
                     border: Border.all(),
                     borderRadius: BorderRadius.circular(30)),
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const LoginUi()));
+                  },
                   child: const Text(
-                    "Login With Google",
+                    "Continue",
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                 ),

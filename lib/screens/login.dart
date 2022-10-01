@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loginui/screens/note_screen.dart';
 
 class LoginUi extends StatefulWidget {
   const LoginUi({super.key});
@@ -9,6 +11,9 @@ class LoginUi extends StatefulWidget {
 }
 
 class _LoginUiState extends State<LoginUi> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -46,8 +51,9 @@ class _LoginUiState extends State<LoginUi> {
                       height: 250,
                       width: 250,
                     )),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(
                     prefixIcon: Icon(
                       Icons.email,
                       color: Color.fromARGB(236, 24, 68, 8),
@@ -64,8 +70,9 @@ class _LoginUiState extends State<LoginUi> {
                 const SizedBox(
                   height: 20,
                 ),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: _passwordController,
+                  decoration: const InputDecoration(
                     prefixIcon: Icon(
                       Icons.key,
                       color: Color.fromARGB(236, 24, 68, 8),
@@ -89,7 +96,25 @@ class _LoginUiState extends State<LoginUi> {
                         border: Border.all(),
                         borderRadius: BorderRadius.circular(30)),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          final auth = await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                  email: _emailController.text,
+                                  password: _passwordController.text);
+                          if (auth.user != null) {
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const NoteListView(),
+                                ),
+                                (e) => false);
+                          }
+                        } on FirebaseAuthException {
+                          debugPrint("Cannot Login");
+                        }
+                      },
                       child: const Text(
                         "Login",
                         style: TextStyle(

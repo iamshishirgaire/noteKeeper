@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class NoteDetails extends StatefulWidget {
-  const NoteDetails({super.key});
+  final Map<String, dynamic> note;
+  const NoteDetails({super.key, required this.note});
 
   @override
   State<NoteDetails> createState() => _NoteDetailsState();
@@ -26,16 +27,16 @@ class _NoteDetailsState extends State<NoteDetails> {
             const SizedBox(
               height: 30,
             ),
-            const Text(
-              "This is note Title",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+            Text(
+              widget.note['title'],
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 30,
             ),
-            const Text(
-              "Hey My Buddy this is the Subtitle",
-              style: TextStyle(fontSize: 30, fontWeight: FontWeight.w300),
+            Text(
+              widget.note['subtitle'],
+              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w300),
             ),
             const SizedBox(
               height: 20,
