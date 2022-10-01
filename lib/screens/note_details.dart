@@ -1,8 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:loginui/screens/addNote.dart';
+import 'package:loginui/screens/note_screen.dart';
 
 class NoteDetails extends StatefulWidget {
-  final Map<String, dynamic> note;
-  const NoteDetails({super.key, required this.note});
+  Map<String, dynamic> note;
+  NoteDetails({super.key, required this.note});
 
   @override
   State<NoteDetails> createState() => _NoteDetailsState();
@@ -13,7 +16,7 @@ class _NoteDetailsState extends State<NoteDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Add Notes"),
+        title: const Text("Note Details"),
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20.0, right: 20),
@@ -48,9 +51,9 @@ class _NoteDetailsState extends State<NoteDetails> {
             const SizedBox(
               height: 10,
             ),
-            const Text(
-              "   High",
-              style: TextStyle(fontSize: 20, color: Colors.red),
+            Text(
+              widget.note["importance"],
+              style: const TextStyle(fontSize: 20, color: Colors.red),
             ),
             const SizedBox(
               height: 60,
@@ -64,7 +67,21 @@ class _NoteDetailsState extends State<NoteDetails> {
                       border: Border.all(),
                       borderRadius: BorderRadius.circular(30)),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => AddNote(
+                                title: "Edit Notes",
+                                editNote: widget.note,
+                              )));
+                      final update = await FirebaseFirestore.instance
+                          .collection('notes')
+                          .doc(widget.note['id'])
+                          .get();
+                      final updatedData = update.data();
+                      updatedData!['id'] = widget.note['id'];
+                      widget.note = updatedData;
+                      setState(() {});
+                    },
                     child: const Text(
                       "Edit ",
                       style:
@@ -78,7 +95,19 @@ class _NoteDetailsState extends State<NoteDetails> {
                       border: Border.all(),
                       borderRadius: BorderRadius.circular(30)),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      try {
+                        await FirebaseFirestore.instance
+                            .collection("notes")
+                            .doc(widget.note["id"])
+                            .delete()
+                            .whenComplete(() => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                    builder: (_) => const NoteListView())));
+                      } on FirebaseException catch (e) {
+                        debugPrint(e.message);
+                      }
+                    },
                     child: const Text(
                       "Delete",
                       style:

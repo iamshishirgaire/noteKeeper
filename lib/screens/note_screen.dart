@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:loginui/screens/addNote.dart';
-import 'package:loginui/screens/note_details.dart';
+
+import 'note_details.dart';
 
 class NoteListView extends StatefulWidget {
   const NoteListView({Key? key}) : super(key: key);
@@ -16,8 +17,10 @@ class _NoteListViewState extends State<NoteListView> {
   void _readData() async {
     _notes.clear();
     final data = await FirebaseFirestore.instance.collection('notes').get();
+
     for (var i in data.docs) {
       final jsonData = i.data();
+      jsonData.addAll({'id': i.id});
       _notes.add(jsonData);
     }
     setState(() {});
@@ -35,7 +38,7 @@ class _NoteListViewState extends State<NoteListView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const AddNote()));
+              .push(MaterialPageRoute(builder: (_) => AddNote()));
           _readData();
         },
         child: const Icon(Icons.add),
@@ -47,32 +50,41 @@ class _NoteListViewState extends State<NoteListView> {
         onRefresh: () async {
           _readData();
         },
-        child: ListView.builder(
-          itemCount: _notes.length,
-          itemBuilder: (BuildContext context, int index) {
-            final note = _notes[index];
-            return Container(
-              margin: const EdgeInsets.only(
-                  left: 10, top: 10, bottom: 5, right: 10),
-              child: ListTile(
-                onTap: () async {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (_) => NoteDetails(
-                            note: note,
+        child: _notes.isEmpty
+            ? const Center(
+                child: Text(
+                "No Notes Found.",
+                style: TextStyle(fontSize: 20),
+              ))
+            : ListView.builder(
+                itemCount: _notes.length,
+                itemBuilder: (BuildContext context, int index) {
+                  final note = _notes[index];
+                  return Container(
+                      margin: const EdgeInsets.only(
+                          left: 10, top: 10, bottom: 5, right: 10),
+                      child: ListTile(
+                          onTap: () async {
+                            await Navigator.of(context).push(MaterialPageRoute(
+                                builder: (_) => NoteDetails(
+                                      note: note,
+                                    )));
+
+                            _readData();
+                          },
+                          leading: CircleAvatar(
+                            child: Text("${index + 1}"),
+                          ),
+                          title: Text(note['title']),
+                          subtitle: Text(note['subtitle']),
+                          trailing: Column(
+                            children: const [
+                              Text("2078/10/12"),
+                              Text("5:30 A.M.")
+                            ],
                           )));
                 },
-                leading: CircleAvatar(
-                  child: Text("${index + 1}"),
-                ),
-                title: Text(note['title']),
-                subtitle: Text(note['subtitle']),
-                trailing: Column(
-                  children: const [Text("2078/10/12"), Text("5:30 A.M.")],
-                ),
               ),
-            );
-          },
-        ),
       ),
     );
   }
