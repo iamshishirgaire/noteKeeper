@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^1.1.5
+  lottie: ^1.4.3
 
 dev_dependencies:
   flutter_lints: ^2.0.0

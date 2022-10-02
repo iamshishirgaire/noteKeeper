@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loginui/screens/login.dart';
+import 'package:loginui/screens/note_screen.dart';
 
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({super.key});
@@ -37,8 +39,13 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                     borderRadius: BorderRadius.circular(30)),
                 child: TextButton(
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (_) => const LoginUi()));
+                    FirebaseAuth.instance.currentUser == null
+                        ? Navigator.pushReplacement(context,
+                            MaterialPageRoute(builder: (_) => const LoginUi()))
+                        : Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const NoteListView()));
                   },
                   child: const Text(
                     "Continue",

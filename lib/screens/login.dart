@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:loginui/screens/note_screen.dart';
+import 'package:loginui/screens/registeration.dart';
+import 'package:lottie/lottie.dart';
 
 class LoginUi extends StatefulWidget {
   const LoginUi({super.key});
@@ -130,10 +132,18 @@ class _LoginUiState extends State<LoginUi> {
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             try {
+                              showDialog(
+                                  barrierColor: Colors.white,
+                                  context: context,
+                                  builder: (_) => Lottie.asset(
+                                        "assets/animation.json",
+                                      ));
                               final auth = await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
                                       email: _emailController.text,
                                       password: _passwordController.text);
+                              await Future.delayed(const Duration(seconds: 5));
+                              Navigator.pop(context);
                               if (auth.user != null) {
                                 // ignore: use_build_context_synchronously
                                 Navigator.pushAndRemoveUntil(
@@ -143,8 +153,13 @@ class _LoginUiState extends State<LoginUi> {
                                     ),
                                     (e) => false);
                               }
-                            } on FirebaseAuthException {
-                              debugPrint("Cannot Login");
+                            } on FirebaseAuthException catch (e) {
+                              Navigator.pop(context);
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                      content: Container(
+                                child: Text("${e.message}"),
+                              )));
                             }
                           }
                         },
@@ -156,6 +171,30 @@ class _LoginUiState extends State<LoginUi> {
                       ),
                     ),
                   ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        "Don't have a account ?",
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ),
+                      TextButton(
+                        onPressed: (() {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => const RegisterPage()));
+                        }),
+                        child: const Text(
+                          "SignUp",
+                          style: TextStyle(fontSize: 18, color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

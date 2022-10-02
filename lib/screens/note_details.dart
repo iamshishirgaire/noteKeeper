@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:loginui/screens/addNote.dart';
+import 'package:loginui/screens/add_note.dart';
 import 'package:loginui/screens/note_screen.dart';
 
 // ignore: must_be_immutable
