@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:loginui/screens/addNote.dart';
 import 'package:loginui/screens/note_screen.dart';
 
+// ignore: must_be_immutable
 class NoteDetails extends StatefulWidget {
   Map<String, dynamic> note;
   NoteDetails({super.key, required this.note});

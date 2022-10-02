@@ -108,6 +108,7 @@ class _AddNoteState extends State<AddNote> {
                             "title": _titleController.text,
                             "subtitle": _subtitleController.text,
                             "importance": _impController,
+                            'dateTime': FieldValue.serverTimestamp()
                           });
                           // ignore: use_build_context_synchronously
                           Navigator.of(context).pop();
@@ -116,6 +117,7 @@ class _AddNoteState extends State<AddNote> {
                             "title": _titleController.text,
                             "subtitle": _subtitleController.text,
                             "importance": _impController,
+                            "updateAt": FieldValue.serverTimestamp()
                           };
                           await FirebaseFirestore.instance
                               .collection("notes")

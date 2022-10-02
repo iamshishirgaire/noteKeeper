@@ -16,7 +16,10 @@ class _NoteListViewState extends State<NoteListView> {
 
   void _readData() async {
     _notes.clear();
-    final data = await FirebaseFirestore.instance.collection('notes').get();
+    final data = await FirebaseFirestore.instance
+        .collection('notes')
+        .orderBy("dateTime", descending: true)
+        .get();
 
     for (var i in data.docs) {
       final jsonData = i.data();
@@ -60,7 +63,35 @@ class _NoteListViewState extends State<NoteListView> {
                 itemCount: _notes.length,
                 itemBuilder: (BuildContext context, int index) {
                   final note = _notes[index];
-                  return Container(
+                  return Dismissible(
+                    background: Container(
+                      color: Colors.red,
+                    ),
+                    key: ObjectKey(note["id"]),
+                    onDismissed: (dir) async {
+                      await FirebaseFirestore.instance
+                          .collection("notes")
+                          .doc(note["id"])
+                          .delete();
+
+                      // _readData();
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text("Note Deleted"),
+                          action: SnackBarAction(
+                              label: "Undo",
+                              onPressed: () async {
+                                await FirebaseFirestore.instance
+                                    .collection("notes")
+                                    .doc(note["id"])
+                                    .set(note);
+                                _readData();
+                              }),
+                        ),
+                      );
+                    },
+                    child: Container(
                       margin: const EdgeInsets.only(
                           left: 10, top: 10, bottom: 5, right: 10),
                       child: ListTile(
@@ -73,16 +104,33 @@ class _NoteListViewState extends State<NoteListView> {
                             _readData();
                           },
                           leading: CircleAvatar(
-                            child: Text("${index + 1}"),
+                            backgroundColor: note["importance"] == "High"
+                                ? Colors.red
+                                : note["importance"] == "Medium"
+                                    ? Colors.amber
+                                    : Colors.green,
+                            child: Text("${index + 1}",
+                                style: const TextStyle(color: Colors.white)),
                           ),
                           title: Text(note['title']),
                           subtitle: Text(note['subtitle']),
-                          trailing: Column(
-                            children: const [
-                              Text("2078/10/12"),
-                              Text("5:30 A.M.")
-                            ],
-                          )));
+                          trailing: Builder(builder: (context) {
+                            final dateTime = note['dateTime'] as Timestamp;
+                            final date =
+                                dateTime.toDate().toString().split(' ')[0];
+                            final time = dateTime
+                                .toDate()
+                                .toString()
+                                .split(' ')[1]
+                                .split('.')
+                                .first;
+
+                            return Column(
+                              children: [Text(date), Text(time)],
+                            );
+                          })),
+                    ),
+                  );
                 },
               ),
       ),
