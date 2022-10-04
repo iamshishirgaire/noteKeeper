@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:loginui/screens/add_note.dart';
 import 'package:loginui/screens/note_screen.dart';
 
+import 'helper/note_class.dart';
+
 // ignore: must_be_immutable
 class NoteDetails extends StatefulWidget {
-  Map<String, dynamic> note;
+  Note note;
   NoteDetails({super.key, required this.note});
 
   @override
@@ -32,14 +34,14 @@ class _NoteDetailsState extends State<NoteDetails> {
               height: 30,
             ),
             Text(
-              widget.note['title'],
+              widget.note.title,
               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
             ),
             const SizedBox(
               height: 30,
             ),
             Text(
-              widget.note['subtitle'],
+              widget.note.subtitle,
               style: const TextStyle(fontSize: 30, fontWeight: FontWeight.w300),
             ),
             const SizedBox(
@@ -53,7 +55,7 @@ class _NoteDetailsState extends State<NoteDetails> {
               height: 10,
             ),
             Text(
-              widget.note["importance"],
+              widget.note.importance,
               style: const TextStyle(fontSize: 20, color: Colors.red),
             ),
             const SizedBox(
@@ -76,11 +78,11 @@ class _NoteDetailsState extends State<NoteDetails> {
                               )));
                       final update = await FirebaseFirestore.instance
                           .collection('notes')
-                          .doc(widget.note['id'])
+                          .doc(widget.note.id.toString())
                           .get();
                       final updatedData = update.data();
-                      updatedData!['id'] = widget.note['id'];
-                      widget.note = updatedData;
+                      updatedData!['id'] = widget.note.id;
+                      widget.note = Note.fromJson(updatedData);
                       setState(() {});
                     },
                     child: const Text(
@@ -100,7 +102,7 @@ class _NoteDetailsState extends State<NoteDetails> {
                       try {
                         await FirebaseFirestore.instance
                             .collection("notes")
-                            .doc(widget.note["id"])
+                            .doc(widget.note.id.toString())
                             .delete()
                             .whenComplete(() => Navigator.of(context).push(
                                 MaterialPageRoute(

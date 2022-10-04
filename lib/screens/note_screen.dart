@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loginui/screens/add_note.dart';
+import 'package:loginui/screens/helper/note_class.dart';
 import 'package:loginui/screens/user_profile.dart';
 import 'package:lottie/lottie.dart';
 
@@ -16,7 +17,8 @@ class NoteListView extends StatefulWidget {
 
 class _NoteListViewState extends State<NoteListView> {
   bool isLoaded = false;
-  final List<Map<String, dynamic>> _notes = [];
+  //final List<Map<String, dynamic>> _notes = [];
+  final List<Note> _notes = [];
 
   Future _readData() async {
     _notes.clear();
@@ -32,7 +34,7 @@ class _NoteListViewState extends State<NoteListView> {
     for (var i in data.docs) {
       final jsonData = i.data();
       jsonData.addAll({'id': i.id});
-      _notes.add(jsonData);
+      _notes.add(Note.fromJson(jsonData));
     }
     setState(() {});
   }
@@ -94,11 +96,11 @@ class _NoteListViewState extends State<NoteListView> {
                             ),
                           ),
                         ),
-                        key: ObjectKey(note["id"]),
+                        key: ObjectKey(_notes[1].id),
                         onDismissed: (dir) async {
                           await FirebaseFirestore.instance
                               .collection("notes")
-                              .doc(note["id"])
+                              .doc(note.id.toString())
                               .delete();
 
                           // _readData();
@@ -112,8 +114,8 @@ class _NoteListViewState extends State<NoteListView> {
                                   onPressed: () async {
                                     await FirebaseFirestore.instance
                                         .collection("notes")
-                                        .doc(note["id"])
-                                        .set(note);
+                                        .doc(note.id.toString())
+                                        .set(note.toJson());
                                     _readData();
                                   }),
                             ),
@@ -133,9 +135,9 @@ class _NoteListViewState extends State<NoteListView> {
                                 _readData();
                               },
                               leading: CircleAvatar(
-                                backgroundColor: note["importance"] == "High"
+                                backgroundColor: note.importance == "High"
                                     ? Colors.red
-                                    : note["importance"] == "Medium"
+                                    : note.importance == "Medium"
                                         ? Colors.amber
                                         : Colors.green,
                                 child: Text("${index + 1}",
@@ -143,21 +145,19 @@ class _NoteListViewState extends State<NoteListView> {
                                         const TextStyle(color: Colors.white)),
                               ),
                               title: Text(
-                                note['title'],
+                                note.title,
                                 style: const TextStyle(
                                     overflow: TextOverflow.ellipsis),
                               ),
                               subtitle: Text(
-                                note['subtitle'],
+                                note.subtitle,
                                 style: const TextStyle(
                                     overflow: TextOverflow.ellipsis),
                               ),
                               trailing: Builder(builder: (context) {
-                                final dateTime = note['dateTime'] as Timestamp;
-                                final date =
-                                    dateTime.toDate().toString().split(' ')[0];
+                                final dateTime = note.dateTime;
+                                final date = dateTime.toString().split(' ')[0];
                                 final time = dateTime
-                                    .toDate()
                                     .toString()
                                     .split(' ')[1]
                                     .split('.')

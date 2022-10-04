@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'helper/note_class.dart';
+
 // ignore: must_be_immutable
 class AddNote extends StatefulWidget {
   String title;
-  Map<String, dynamic>? editNote;
+  Note? editNote;
   AddNote({super.key, this.title = 'Add Note', this.editNote});
 
   @override
@@ -21,9 +23,9 @@ class _AddNoteState extends State<AddNote> {
   @override
   void initState() {
     if (widget.editNote != null) {
-      _titleController.text = widget.editNote!["title"];
-      _subtitleController.text = widget.editNote!["subtitle"];
-      _impController = widget.editNote!["importance"];
+      _titleController.text = widget.editNote!.title;
+      _subtitleController.text = widget.editNote!.subtitle;
+      _impController = widget.editNote!.importance;
     }
     super.initState();
   }
@@ -123,16 +125,16 @@ class _AddNoteState extends State<AddNote> {
                         if (_formController.currentState!.validate()) {
                           try {
                             if (widget.editNote == null) {
+                              final note = Note(
+                                  importance: _impController,
+                                  title: _titleController.text,
+                                  userId:
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                  subtitle: _subtitleController.text);
+
                               await FirebaseFirestore.instance
                                   .collection("notes")
-                                  .add({
-                                "title": _titleController.text,
-                                "subtitle": _subtitleController.text,
-                                "importance": _impController,
-                                "userId":
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                'dateTime': FieldValue.serverTimestamp()
-                              });
+                                  .add(note.toJson());
                               // ignore: use_build_context_synchronously
                               Navigator.of(context).pop();
                             } else {
@@ -146,9 +148,9 @@ class _AddNoteState extends State<AddNote> {
                               };
                               await FirebaseFirestore.instance
                                   .collection("notes")
-                                  .doc(widget.editNote!["id"])
+                                  .doc(widget.editNote!.id.toString())
                                   .update(updatedData);
-                              updatedData['id'] = widget.editNote!['id'];
+                              updatedData['id'] = widget.editNote!.id;
 
                               // ignore: use_build_context_synchronously
                               Navigator.of(context).pop();
