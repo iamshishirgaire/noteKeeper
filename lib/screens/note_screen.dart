@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loginui/screens/add_note.dart';
-import 'package:loginui/screens/login.dart';
+import 'package:loginui/screens/user_profile.dart';
 import 'package:lottie/lottie.dart';
 
 import 'note_details.dart';
@@ -18,7 +18,7 @@ class _NoteListViewState extends State<NoteListView> {
   bool isLoaded = false;
   final List<Map<String, dynamic>> _notes = [];
 
-  void _readData() async {
+  Future _readData() async {
     _notes.clear();
 
     final data = await FirebaseFirestore.instance
@@ -57,23 +57,18 @@ class _NoteListViewState extends State<NoteListView> {
       appBar: AppBar(
         actions: [
           IconButton(
-            onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              // ignore: use_build_context_synchronously
-              Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (_) => const LoginUi()),
-                  ((route) => false));
-            },
-            icon: const Icon(Icons.exit_to_app),
-          ),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (_) => const UserProfile()));
+              },
+              icon: const Icon(Icons.account_circle_rounded))
         ],
         title: Text(
             (FirebaseAuth.instance.currentUser!.displayName) ?? "NoteKeeper"),
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          _readData();
+          await _readData();
         },
         child: !isLoaded
             ? Center(child: Lottie.asset("assets/notesLoading.json"))

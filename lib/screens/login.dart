@@ -143,6 +143,7 @@ class _LoginUiState extends State<LoginUi> {
                                       email: _emailController.text,
                                       password: _passwordController.text);
                               await Future.delayed(const Duration(seconds: 5));
+                              // ignore: use_build_context_synchronously
                               Navigator.pop(context);
                               if (auth.user != null) {
                                 // ignore: use_build_context_synchronously
@@ -155,11 +156,8 @@ class _LoginUiState extends State<LoginUi> {
                               }
                             } on FirebaseAuthException catch (e) {
                               Navigator.pop(context);
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(SnackBar(
-                                      content: Container(
-                                child: Text("${e.message}"),
-                              )));
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("${e.message}")));
                             }
                           }
                         },

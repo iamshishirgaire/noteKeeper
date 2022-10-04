@@ -111,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           try {
-                            final auth = await FirebaseAuth.instance
+                            await FirebaseAuth.instance
                                 .createUserWithEmailAndPassword(
                                     email: _emailController.text,
                                     password: _passwordController.text);
@@ -125,15 +125,14 @@ class _RegisterPageState extends State<RegisterPage> {
                                 backgroundColor: Colors.greenAccent,
                               ),
                             );
+                            // ignore: use_build_context_synchronously
                             Navigator.of(context).pushAndRemoveUntil(
                                 MaterialPageRoute(
                                     builder: (_) => const NoteListView()),
                                 ((route) => false));
                           } on FirebaseAuthException catch (e) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                content: Container(
-                              child: Text("${e.message}"),
-                            )));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("${e.message}")));
                           }
                         }
                       },
