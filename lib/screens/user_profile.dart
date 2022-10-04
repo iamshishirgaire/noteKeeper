@@ -32,11 +32,11 @@ class _UserProfileState extends State<UserProfile> {
                   borderRadius: BorderRadius.circular(50),
                   color: Colors.white,
                   border: Border.all(
-                    color: Colors.deepOrange,
+                    color: Colors.blue,
                     width: 5,
                   )),
-              child: CircleAvatar(
-                child: Image.network(
+              child: const CircleAvatar(
+                backgroundImage: NetworkImage(
                     "https://filmfare.wwmindia.com/content/2019/aug/hrithikroshanweb1565958352.jpg"),
               ),
             ),
@@ -44,16 +44,16 @@ class _UserProfileState extends State<UserProfile> {
           const SizedBox(
             height: 30,
           ),
-          const Text(
-            "Shishir Gaire",
-            style: TextStyle(fontSize: 20),
+          Text(
+            ((FirebaseAuth.instance.currentUser!.displayName)) ?? "Your Name",
+            style: const TextStyle(fontSize: 20),
           ),
           const SizedBox(
             height: 10,
           ),
-          const Text(
-            "shishirgaire35@gmail.com",
-            style: TextStyle(fontSize: 20),
+          Text(
+            ((FirebaseAuth.instance.currentUser!.email)) ?? "Your Email",
+            style: const TextStyle(fontSize: 20),
           ),
           const SizedBox(
             height: 50,
