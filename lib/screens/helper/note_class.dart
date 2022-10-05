@@ -1,23 +1,23 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class Note {
   late String title;
   late String subtitle;
   late String importance;
-  late String id;
+  late String? id;
   late String userId;
   late DateTime dateTime;
   Note(
       {required this.title,
       required this.subtitle,
       required this.importance,
+      required this.dateTime,
+      this.id,
       required this.userId});
 
   Note.fromJson(Map json) {
     title = json["title"];
     subtitle = json["subtitle"];
     importance = json["importance"];
-    dateTime = (json["dateTime"] as Timestamp).toDate();
+    dateTime = DateTime.fromMicrosecondsSinceEpoch(json['dateTime']);
     id = json["id"];
     userId = json["userId"];
   }
@@ -34,7 +34,7 @@ class Note {
       "subtitle": subtitle,
       "importance": importance,
       "userId": userId,
-      "dateTime": FieldValue.serverTimestamp()
+      "dateTime": dateTime.microsecondsSinceEpoch,
     };
   }
 }

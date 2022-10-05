@@ -1,6 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loginui/screens/helper/note_services.dart';
 
 import 'helper/note_class.dart';
 
@@ -123,40 +123,27 @@ class _AddNoteState extends State<AddNote> {
                     child: TextButton(
                       onPressed: () async {
                         if (_formController.currentState!.validate()) {
-                          try {
-                            if (widget.editNote == null) {
-                              final note = Note(
-                                  importance: _impController,
-                                  title: _titleController.text,
-                                  userId:
-                                      FirebaseAuth.instance.currentUser!.uid,
-                                  subtitle: _subtitleController.text);
+                          if (widget.editNote == null) {
+                            final note = Note(
+                                dateTime: DateTime.now(),
+                                importance: _impController,
+                                title: _titleController.text,
+                                userId: FirebaseAuth.instance.currentUser!.uid,
+                                subtitle: _subtitleController.text);
+                            await NoteServices().addNote(note);
+                            // ignore: use_build_context_synchronously
+                            Navigator.of(context).pop();
+                          } else {
+                            Note updatedNote = Note(
+                                dateTime: widget.editNote!.dateTime,
+                                title: _titleController.text,
+                                subtitle: _subtitleController.text,
+                                importance: _impController,
+                                id: widget.editNote!.id,
+                                userId: widget.editNote!.userId.toString());
 
-                              await FirebaseFirestore.instance
-                                  .collection("notes")
-                                  .add(note.toJson());
-                              // ignore: use_build_context_synchronously
-                              Navigator.of(context).pop();
-                            } else {
-                              final updatedData = {
-                                "title": _titleController.text,
-                                "subtitle": _subtitleController.text,
-                                "importance": _impController,
-                                "userId":
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                "updateAt": FieldValue.serverTimestamp()
-                              };
-                              await FirebaseFirestore.instance
-                                  .collection("notes")
-                                  .doc(widget.editNote!.id.toString())
-                                  .update(updatedData);
-                              updatedData['id'] = widget.editNote!.id;
-
-                              // ignore: use_build_context_synchronously
-                              Navigator.of(context).pop();
-                            }
-                          } on FirebaseException catch (e) {
-                            debugPrint(e.message);
+                            await NoteServices().editNote(updatedNote);
+                            Navigator.of(context).pop();
                           }
                         }
 

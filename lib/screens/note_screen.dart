@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loginui/screens/add_note.dart';
 import 'package:loginui/screens/helper/note_class.dart';
+import 'package:loginui/screens/helper/note_services.dart';
 import 'package:loginui/screens/user_profile.dart';
 import 'package:lottie/lottie.dart';
 
@@ -18,24 +19,15 @@ class NoteListView extends StatefulWidget {
 class _NoteListViewState extends State<NoteListView> {
   bool isLoaded = false;
   //final List<Map<String, dynamic>> _notes = [];
-  final List<Note> _notes = [];
+  List<Note> _notes = [];
 
   Future _readData() async {
     _notes.clear();
+    _notes = await NoteServices().getAllNotes();
 
-    final data = await FirebaseFirestore.instance
-        .collection('notes')
-        .orderBy("dateTime", descending: true)
-        .where("userId", isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .get();
     await Future.delayed(const Duration(seconds: 1));
     isLoaded = true;
 
-    for (var i in data.docs) {
-      final jsonData = i.data();
-      jsonData.addAll({'id': i.id});
-      _notes.add(Note.fromJson(jsonData));
-    }
     setState(() {});
   }
 
@@ -96,7 +88,7 @@ class _NoteListViewState extends State<NoteListView> {
                             ),
                           ),
                         ),
-                        key: ObjectKey(_notes[1].id),
+                        key: ObjectKey(_notes[0].id),
                         onDismissed: (dir) async {
                           await FirebaseFirestore.instance
                               .collection("notes")
