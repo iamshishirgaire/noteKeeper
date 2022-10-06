@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.loginui">
    <application
-        android:label="loginui"
+        android:label="NoteKeeper"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
