@@ -47,10 +47,10 @@ class _UserProfileState extends State<UserProfile> {
                 ),
                 Center(
                   child: Container(
-                    height: 100,
-                    width: 100,
+                    height: 150,
+                    width: 150,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(50),
+                        borderRadius: BorderRadius.circular(75),
                         color: Colors.white,
                         border: Border.all(
                           color: Colors.blue,
@@ -58,7 +58,8 @@ class _UserProfileState extends State<UserProfile> {
                         )),
                     child: const CircleAvatar(
                       backgroundImage: NetworkImage(
-                          "https://filmfare.wwmindia.com/content/2019/aug/hrithikroshanweb1565958352.jpg"),
+                        "https://img.freepik.com/premium-vector/man-profile-cartoon_18591-58482.jpg?w=900",
+                      ),
                     ),
                   ),
                 ),
