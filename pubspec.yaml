@@ -12,10 +12,10 @@ dependencies:
   firebase_core: ^1.23.0
   flutter:
     sdk: flutter
+  flutter_bloc: ^8.1.1
   flutter_svg: ^1.1.5
-
   lottie: ^1.4.3
-
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_launcher_icons: ^0.10.0
@@ -24,19 +24,14 @@ dev_dependencies:
     sdk: flutter
 
 flutter_icons:
-    android: true
-    ios: true
-    image_path: "assets/sticky-note.png"
-
-  
-
+  android: true
+  ios: true
+  image_path: "assets/sticky-note.png"
 
 flutter:
 
   uses-material-design: true
 
-
-    
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
